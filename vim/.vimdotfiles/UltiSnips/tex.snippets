@@ -45,8 +45,27 @@ snippet template "Basic template for note taking" b
 \usepackage[english,spanish]{babel}
 \usepackage{amsmath, amssymb, amsthm, cancel}
 \usepackage{/home/mrg/deps/latex/boiboites}
+\usepackage{/home/mrg/deps/latex/jlcode}
+\usepackage{marginnote,geometry}
 
+% For pretty algo codes
+\usepackage{listings}
+\lstset{numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt}
+\usepackage[linesnumbered,algoruled,boxed,line]{algorithm2e}
+
+
+% Set cancel command color to red
 \renewcommand{\CancelColor}{\color{red}}
+
+% inkscape-figure manager and shortcuts
+\usepackage{import}
+\usepackage{pdfpages,transparent,xcolor}
+
+\newcommand{\incfig}[1]{%
+    \def\svgwidth{\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
+}
+\pdfsuppresswarningpagegroup=1
 
 \title{Notas de Clase: $1 2020I}
 \author{Miguel Raz Guzmán Macedo}
@@ -116,8 +135,47 @@ EXAMPLE
 TAREA
 \end{hw}
 
+
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwResult{Write the result here}
+initialization\;
+\While{While condition}{instructions\;}
+\eIf{condition}{instructions1\;
+instructions2\;
+}{
+instructions3\;
+}
+}
+\caption{How to write algos}
+\end{algorithm}
+
 \end{document}
 endsnippet
+
+snippet algorithm "Algorithm blueprint" bA
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwResult{${1:Write the input here}}
+\KwResult{${2:Write the output here}}
+initialization\;
+
+// Step 1
+$3
+\While{While condition}{instructions\;}
+\eIf{condition}{instructions1\;
+instructions2\;
+}{
+instructions3\;
+}
+}
+\caption{How to write algos}
+\end{algorithm}
+endsnippet
+
+
 
 snippet beg "begin{} / end{}" bA
 \\begin{$1}[$2]
@@ -383,11 +441,20 @@ endsnippet
 
 context "math()"
 snippet deriv "d/dt" iA
-\frac{d}{dt}($1)$0
+\frac{d}{dt}\left( ${1:${VISUAL}} \right) $0
 endsnippet
 
+context "math()"
 snippet part "d/dx" w
 \frac{\partial ${1:f}}{\partial ${2:x}} $0
+endsnippet
+
+snippet partt "d2/dx/dy" w
+\frac{\partial^2 ${1:f}}{\partial ${2:x} \partial ${3:y}} $0
+endsnippet
+
+snippet parttt "d2f/dx2" w
+\frac{\partial^2 ${1:f}}{\partial ${2:x}^2} $0
 endsnippet
 
 context "math()"
@@ -563,12 +630,18 @@ endsnippet
 
 context "math()"
 snippet Ric "Ricci Symbol" iA
-R^{${1:i}_{${2:ijk;l}} $0
+R^{${1:i}}_{${2:ijk;l}} $0
 endsnippet
 
 context "math()"
 snippet Einst "Einstein Tensor" iA
 G_{\mu \nu}
+endsnippet
+
+priority 100
+context "math()"
+snippet npsil "multiples of pi" iA
+\sin \left( \frac{n \pi ${1:x}}{${2:l}} $3 \right) $0
 endsnippet
 
 
@@ -587,7 +660,7 @@ endsnippet
 
 priority 200
 context "math()"
-snippet '(?<!\\)(alpha|beta|Gamma|gamma|delta|Delta|epsilon|lambda|Lambda|phi|Phi|psi|rho|mu|nu|tau|theta|Theta|sigma)' "ln" rwA 
+snippet '(?<!\\)(alpha|beta|Gamma|gamma|delta|Delta|epsilon|eta|lambda|Lambda|phi|Phi|psi|rho|mu|nu|tau|theta|Theta|sigma|omega|Omega)' "ln" rwA 
 \\`!p snip.rv = match.group(1)`
 endsnippet
 
@@ -792,8 +865,20 @@ endsnippet
 
 priority 10
 context "math()"
+snippet "vec" "vec" riA
+\vec{$1}$0
+endsnippet
+
+priority 100
+context "math()"
+snippet "([a-zA-Z])vec" "vec" riA
+\vec{`!p snip.rv=match.group(1)`}
+endsnippet
+
+priority 10
+context "math()"
 snippet "uline" "underline" riA
-\underline{$1}$0
+\underline{$1} $0
 endsnippet
 
 priority 100
@@ -814,11 +899,24 @@ snippet "([a-zA-Z])uset" "underset" riA
 \underline{`!p snip.rv=match.group(1)`}
 endsnippet
 
+priority 10
+context "math()"
+snippet "ubrace" "underbrace" riA
+\begingroup\color{${1:red}}\underbrace{\color{black}{${2:${VISUAL}}}}_\text{\color{$1}{$3}}\endgroup $0
+endsnippet
 
 priority 100
 context "math()"
-snippet "curly" "curly braces" w
-\big{ ^{$1}_{$2} \big}$0
+snippet "([a-zA-Z])ubrace" "underbrace" riA
+\underbrace{`!p snip.rv=match.group(1)`}
+endsnippet
+
+snippet "BFont" "Bold font" riA
+\textbf{${1:${VISUAL}}} $0
+endsnippet
+
+snippet "([a-zA-Z])BFont" "BFont" riA
+\textbf{`!p snip.rv=match.group(1)`}
 endsnippet
 
 snippet letw "let omega" iA
@@ -865,11 +963,12 @@ $3
 $0
 endsnippet
 
-snippet box "Box"
-`!p snip.rv = '┌' + '─' * (len(t[1]) + 2) + '┐'`
-│ $1 │
-`!p snip.rv = '└' + '─' * (len(t[1]) + 2) + '┘'`
-$0
+snippet jl "julia latex code" bA
+\begin{lstlisting}[language = Julia]
+${1:${VISUAL}}
+\end{lstlisting}
 endsnippet
+
+
 
 # vim:ft=snippets
