@@ -1,0 +1,33 @@
+snippet todo "TODO" b
+### TODO: `echo $USER:` ${1:desc} `!v strftime("%c")`
+endsnippet
+
+snippet jmd "Julia Markdown cell" bA
+\`\`\`julia
+${VISUAL} $1
+\`\`\`
+
+$0
+endsnippet
+
+snippet doc "docstring" b
+"""
+	${VISUAL}
+
+$1
+"""
+$0
+endsnippet
+
+snippet dref "doc hyperreff"
+[\`$1\`](@ref) $0
+endsnippet
+
+snippet eg "docstring example" b
+# Examples 
+\`\`\`jldoctest
+${VISUAL} $1
+\`\`\`
+
+$0
+endsnippet
